@@ -1,46 +1,64 @@
-let cartIcon = document.querySelector(".cart-icon");
-let cartDropdown = document.querySelector(".cart-dropdown");
-
-let cartItems = document.querySelector(".cart-items");
-let cartCount = document.querySelector(".cart-count");
-let cartTotal = document.querySelector(".total-price");
-let productList = document.querySelector(".products-list");
+let [
+  cartIcon,
+  cartDropdown,
+  cartItems,
+  cartCount,
+  cartTotal,
+  productList,
+  body,
+  modal,
+  overlay,
+  closeModalBtn,
+] = [
+  document.querySelector(".cart-icon"),
+  document.querySelector(".cart-dropdown"),
+  document.querySelector(".cart-items"),
+  document.querySelector(".cart-count"),
+  document.querySelector(".total-price"),
+  document.querySelector(".products-list"),
+  document.body,
+  document.getElementById("modal"),
+  document.getElementById("overlay"),
+  document.querySelector(".close-modal-btn"),
+];
 
 let cartProducts;
 
-cartDropdown.style.display = "none";
+function toggleCartDropdown() {
+  cartDropdown.classList.toggle("show-cart");
+}
 
-cartIcon.addEventListener("click", () => {
-  cartDropdown.style.display =
-    cartDropdown.style.display === "none" ? "flex" : "none";
-});
+cartIcon.addEventListener("click", toggleCartDropdown);
 
 (renderProducts = () => {
   // Loop through each product and create a string with HTML to display it
   let productListUI = products.map(
-    (product) => `<div class="product-card">
+    ({
+      product_id,
+      product_desc,
+      product_price,
+      product_image,
+      product_name,
+      added_to_cart,
+    }) => `<div class="product-card">
     <div class="product-img-wrap">
       <img
-        src=${product.product_image}
-        alt=${product.product_name}
+        src=${product_image}
+        alt=${product_name}
         class="product-card-img"
       />
     </div>
     <div class="product-card-content">
       <div class="product-card-details">
-        <h3 class="prduct-name">${product.product_name}</h3>
-        <h4 class="product-price">100 $</h4>
+        <h3 class="prduct-name">${product_name}</h3>
+        <h4 class="product-price">${product_price} $</h4>
         <div class="product-desc">
-         ${product.product_desc}
+         ${product_desc}
         </div>
       </div>
       <div class="product-card-buttons">
-      <!--
-      if statement to show whether or not the product has been added to cart,
-      and provide buttons/links for 'Add to Cart', 'Remove from Cart', and 'View Product'
-    -->
       ${
-        product.added_to_cart
+        added_to_cart
           ? `<div class="added-to-cart">
               <span>Added To Cart </span>
               <img
@@ -52,15 +70,15 @@ cartIcon.addEventListener("click", () => {
                 src="./images/xmark-solid.svg"
                 alt="remove fromcrṁt"
                 class="remove-icon"
-                onclick="removeFromCart(${product.product_id})"
+                onclick="removeFromCart(${product_id})"
               />
             </div>`
-          : `<div class="add-to-cart-btn" onclick="addToCart(${product.product_id})">
+          : `<div class="add-to-cart-btn" onclick="addToCart(${product_id})">
               <span>Add To Cart </span>
               <img src="./images/cart-plus-solid.svg" alt="add to cart" />
             </div>`
       }
-      <div class="view-btn">
+      <div class="view-btn" onclick="showModal(${product_id})">
         <img src="./images/eye-solid.svg" alt="view product" />
       </div>
     </div>
@@ -80,16 +98,16 @@ cartIcon.addEventListener("click", () => {
   // Mapping over the filtered products to generate cart product UI elements
 
   let cartProductUI = cartProducts.map(
-    (product) =>
+    ({ product_price, product_image, product_name }) =>
       `  <li class="cart-item">
     <img
-      src=${product.product_image}
-      alt=${product.product_name}
+      src=${product_image}
+      alt=${product_name}
       class="cart-item-img"
     />
     <div class="cart-item-details">
-      <h4 class="cart-item-name">${product.product_name}</h4>
-      <span class="cart-item-price">${product.product_price} $</span>
+      <h4 class="cart-item-name">${product_name}</h4>
+      <span class="cart-item-price">${product_price} $</span>
     </div>
   </li>`
   );
@@ -127,7 +145,7 @@ let addToCart = (productId) => {
   cartProducts.push(selectedProduct);
 
   //calls renderShoppingCart() function to update the shopping cart UI after adding the product to the cart, and calls renderProducts() function to update the product list UI to reflect the
-  //updated state of the selected product
+
   renderShoppingCart();
   renderProducts();
 };
@@ -148,3 +166,75 @@ let removeFromCart = (productId) => {
     renderProducts();
   }
 };
+
+// This function renders the modal content based on the selected product ID:
+
+let renderModalContent = (productId) => {
+  // find the product that matches the selected product ID
+  let {
+    product_id,
+    product_desc,
+    product_price,
+    product_image,
+    product_name,
+    added_to_cart,
+  } = products.find((product) => product.product_id === productId);
+
+  // create a string of HTML DOM elements to represent the modal content data
+  let modalContent = `
+  <div class="modal-header">
+  <h4 class="modal-title">Product Details</h4>
+  <img
+    src="./images/circle-xmark-regular.svg"
+    class="close-modal-btn"
+    alt="close-modal"
+    onclick="hideModal()"
+  />
+</div>
+<div class="modal-content">
+    <div class="modal-img-wrap">
+      <img src=${product_image} alt=${product_name} class="modal-img" />
+    </div>
+    <div class="modal-details">
+      <h3 class="modal-product-name">${product_name}</h3>
+      <h4 class="modal-product-price">${product_price} $</h4>
+    </div>
+    <div class="modal-product-desc">${product_desc}</div>
+    <div class="${added_to_cart ? "remove" : "add"}-modal-btn" onclick="${
+    added_to_cart ? `removeFromCart(${product_id})` : `addToCart(${product_id})`
+  };hideModal()">${added_to_cart ? "Remove From Cart" : "Add To Cart"}
+  </div>
+  </div>`;
+
+  // Set the innerHTML of the modal content div to the created HTML string.
+  modal.innerHTML = modalContent;
+};
+
+// A function that shows the modal by rendering its content
+
+let showModal = (productId) => {
+  // Render the modal content using the provided product ID
+  renderModalContent(productId);
+  modal.classList.remove("modal-closed");
+  overlay.addEventListener("click", hideModal);
+
+  overlay.style.display = "block";
+
+  body.style.overflow = "hidden";
+};
+
+// This function is called when we need to hide the modal element
+
+let hideModal = () => {
+  modal.classList.add("modal-closed");
+
+  overlay.style.display = "none";
+
+  // Reset the overflow property of the body element to its original value to enable scrolling again
+  body.style.overflow = "";
+
+  overlay.removeEventListener("click", hideModal);
+};
+
+overlay.addEventListener("click", hideModal);
+modal.addEventListener("click", (event) => event.stopPropagation());
