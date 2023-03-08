@@ -15,9 +15,11 @@ cartIcon.addEventListener("click", () => {
     cartDropdown.style.display === "none" ? "flex" : "none";
 });
 
+// Display All Products
 (renderProducts = () => {
-  let productListUI = products.map((product) => {
-    return `<div class="product-card">
+  // Loop through each product and create a string with HTML to display it
+  let productListUI = products.map(
+    (product) => `<div class="product-card">
     <div class="product-img-wrap">
       <img
         src=${product.product_image}
@@ -34,39 +36,55 @@ cartIcon.addEventListener("click", () => {
         </div>
       </div>
       <div class="product-card-buttons">
-      <div class="add-to-cart-btn" onclick="addToCart(${product.product_id})">
-        <span>Add To Cart </span>
-        <img src="./images/cart-plus-solid.svg" alt="add to cart" />
-      </div>
-      <div class="added-to-cart">
-        <span>Added To Cart </span>
-        <img
-          src="./images/check-solid.svg"
-          alt="added to cart"
-          class="check-icon"
-        />
-        <img
-          src="./images/xmark-solid.svg"
-          alt="remove fromcrṁt"
-          class="remove-icon"
-        />
-      </div>
+      <!--
+      if statement to show whether or not the product has been added to cart,
+      and provide buttons/links for 'Add to Cart', 'Remove from Cart', and 'View Product'
+    -->
+      ${
+        product.added_to_cart
+          ? `<div class="added-to-cart">
+              <span>Added To Cart </span>
+              <img
+                src="./images/check-solid.svg"
+                alt="added to cart"
+                class="check-icon"
+              />
+              <img
+                src="./images/xmark-solid.svg"
+                alt="remove fromcrṁt"
+                class="remove-icon"
+                onclick="removeFromCart(${product.product_id})"
+              />
+            </div>`
+          : `<div class="add-to-cart-btn" onclick="addToCart(${product.product_id})">
+              <span>Add To Cart </span>
+              <img src="./images/cart-plus-solid.svg" alt="add to cart" />
+            </div>`
+      }
       <div class="view-btn">
         <img src="./images/eye-solid.svg" alt="view product" />
       </div>
     </div>
     </div>
-  </div>`;
-  });
+  </div>`
+  );
+
+  // Add HTML code to DOM
   productList.innerHTML = productListUI.join("");
 })();
 
+// A function that renders shopping cart UI based on the products added by user
+
 (renderShoppingCart = () => {
-  cartProducts = products.filter((product) => {
-    return product.added_to_cart === true;
-  });
-  let cartProductUI = cartProducts.map((product) => {
-    return `  <li class="cart-item">
+  // Filtering out the products which have been added to cart
+
+  cartProducts = products.filter((product) => product.added_to_cart === true);
+
+  // Mapping over the filtered products to generate cart product UI elements
+
+  let cartProductUI = cartProducts.map(
+    (product) =>
+      `  <li class="cart-item">
     <img
       src=${product.product_image}
       alt=${product.product_name}
@@ -76,35 +94,57 @@ cartIcon.addEventListener("click", () => {
       <h4 class="cart-item-name">${product.product_name}</h4>
       <span class="cart-item-price">${product.product_price} $</span>
     </div>
-  </li>`;
-  });
+  </li>`
+  );
+
+  // Injecting the generated cart product UI into the HTML element with ID "cartItems"
 
   cartItems.innerHTML = cartProductUI.join("");
+
+  // Updating the number of cart items in 'cartCount' HTML element
+
   cartCount.innerText = cartProducts.length;
+
+  // Calculating total price of all the cart items and injecting it into 'cartTotal' HTML element
 
   let totalPrice = cartProducts.reduce((total, product) => {
     let price = parseFloat(product.product_price);
     return total + price;
   }, 0);
+
   cartTotal.innerText = totalPrice;
 })();
 
+//defines a function that takes in a product id as an argument and adds it to the cart
 let addToCart = (productId) => {
-  console.log(
-    "OUTPUT ~ file: script.js:93 ~ addToCart ~ productId:",
-    productId
-  );
-  console.log("test");
+  //uses find() method on products array to retrieve the product with the corresponding id
   let selectedProduct = products.find((product) => {
     return product.product_id === productId;
   });
 
+  //sets the `added_to_cart` property of the selected product to true
   selectedProduct.added_to_cart = true;
+
+  //adds the selected product to the `cartProducts` array using push() method
   cartProducts.push(selectedProduct);
+
+  //calls renderShoppingCart() function to update the shopping cart UI after adding the product
+  //to the cart, and calls renderProducts() function to update the product list UI to reflect the
+  //updated state of the selected product
   renderShoppingCart();
+  renderProducts();
 };
 
-console.log(
-  "OUTPUT ~ file: script.js:95 ~ addToCart ~ cartProducts:",
-  cartProducts
-);
+let removeFromCart = (productId) => {
+  let selectedProduct = products.find((product) => {
+    return product.product_id === productId;
+  });
+
+  if (selectedProduct) {
+    selectedProduct.added_to_cart = false;
+    let selectedProductIndex = cartProducts.indexOf(selectedProduct);
+    cartProducts.splice(selectedProductIndex, 1);
+    renderShoppingCart();
+    renderProducts();
+  }
+};

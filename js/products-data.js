@@ -25,7 +25,7 @@ let products = [
     product_price: "40",
     product_desc: `A smart touch watch is a type of wearable device that features a touchscreen display and offers various features, such as notifications, calls, messaging, fitness tracking, music control, and access to apps. It can be connected to a smartphone via Bluetooth and can be customized with different watch faces and bands.`,
     product_image: "/images/black-watch.jpg",
-    added_to_cart: true,
+    added_to_cart: false,
   },
   {
     product_id: 4,
