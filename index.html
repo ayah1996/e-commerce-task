@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Engagement&family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Shop</title>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="container">
+          <nav class="navbar">
+            <div class="brand">
+              <h3>TShop</h3>
+            </div>
+            <div class="cart-icon">
+              <img
+                src="./images/cart-shopping-solid.svg"
+                alt="Shopping Cart Icon"
+                class="icon"
+              />
+              <span class="cart-count">0</span>
+            </div>
+            <div class="cart-dropdown">
+              <ul class="cart-items"></ul>
+
+              <div class="cart-total">
+                <span class="total-text"> Total Price : </span>
+                <span class="total-price">200</span> $
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
+
+      <section class="products container m-50">
+        <div class="products-list"></div>
+      </section>
+    </main>
+    <script src="./js/products-data.js"></script>
+    <script src="./js/script.js"></script>
+  </body>
+</html>
