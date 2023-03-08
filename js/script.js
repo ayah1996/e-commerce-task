@@ -6,7 +6,7 @@ let cartCount = document.querySelector(".cart-count");
 let cartTotal = document.querySelector(".total-price");
 let productList = document.querySelector(".products-list");
 
-let cartProducts = [];
+let cartProducts;
 
 cartDropdown.style.display = "none";
 
@@ -15,7 +15,6 @@ cartIcon.addEventListener("click", () => {
     cartDropdown.style.display === "none" ? "flex" : "none";
 });
 
-// Display All Products
 (renderProducts = () => {
   // Loop through each product and create a string with HTML to display it
   let productListUI = products.map(
@@ -76,8 +75,6 @@ cartIcon.addEventListener("click", () => {
 // A function that renders shopping cart UI based on the products added by user
 
 (renderShoppingCart = () => {
-  // Filtering out the products which have been added to cart
-
   cartProducts = products.filter((product) => product.added_to_cart === true);
 
   // Mapping over the filtered products to generate cart product UI elements
@@ -115,7 +112,8 @@ cartIcon.addEventListener("click", () => {
   cartTotal.innerText = totalPrice;
 })();
 
-//defines a function that takes in a product id as an argument and adds it to the cart
+//Defines a function that takes in a product id as an argument and adds it to the cart
+
 let addToCart = (productId) => {
   //uses find() method on products array to retrieve the product with the corresponding id
   let selectedProduct = products.find((product) => {
@@ -128,12 +126,13 @@ let addToCart = (productId) => {
   //adds the selected product to the `cartProducts` array using push() method
   cartProducts.push(selectedProduct);
 
-  //calls renderShoppingCart() function to update the shopping cart UI after adding the product
-  //to the cart, and calls renderProducts() function to update the product list UI to reflect the
+  //calls renderShoppingCart() function to update the shopping cart UI after adding the product to the cart, and calls renderProducts() function to update the product list UI to reflect the
   //updated state of the selected product
   renderShoppingCart();
   renderProducts();
 };
+
+//A function that removes a product from the cart if it exists.
 
 let removeFromCart = (productId) => {
   let selectedProduct = products.find((product) => {
@@ -144,6 +143,7 @@ let removeFromCart = (productId) => {
     selectedProduct.added_to_cart = false;
     let selectedProductIndex = cartProducts.indexOf(selectedProduct);
     cartProducts.splice(selectedProductIndex, 1);
+
     renderShoppingCart();
     renderProducts();
   }
