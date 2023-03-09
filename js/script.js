@@ -1,26 +1,15 @@
-let [
-  cartIcon,
-  cartDropdown,
-  cartItems,
-  cartCount,
-  cartTotal,
-  productList,
-  body,
-  modal,
-  overlay,
-  closeModalBtn,
-] = [
-  document.querySelector(".cart-icon"),
-  document.querySelector(".cart-dropdown"),
-  document.querySelector(".cart-items"),
-  document.querySelector(".cart-count"),
-  document.querySelector(".total-price"),
-  document.querySelector(".products-list"),
-  document.body,
-  document.getElementById("modal"),
-  document.getElementById("overlay"),
-  document.querySelector(".close-modal-btn"),
-];
+let cartIcon = document.querySelector(".cart-icon");
+let cartDropdown = document.querySelector(".cart-dropdown");
+let cartItems = document.querySelector(".cart-items");
+let cartCount = document.querySelector(".cart-count");
+let cartTotal = document.querySelector(".total-price");
+
+let productList = document.querySelector(".products-list");
+
+let body = document.body;
+let modal = document.getElementById("modal");
+let overlay = document.getElementById("overlay");
+let closeModalBtn = document.querySelector(".close-modal-btn");
 
 let cartProducts;
 
