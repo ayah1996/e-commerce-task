@@ -94,12 +94,15 @@ cartIcon.addEventListener("click", toggleCartDropdown);
 
 (renderShoppingCart = () => {
   cartProducts = products.filter((product) => product.added_to_cart === true);
-
-  // Mapping over the filtered products to generate cart product UI elements
-
-  let cartProductUI = cartProducts.map(
-    ({ product_price, product_image, product_name }) =>
-      `  <li class="cart-item">
+  if (cartProducts.length === 0) {
+    cartItems.innerHTML = `<h4 class="empty-cart-items">No items in cart</h4>`;
+    cartCount.innerText = "0";
+    cartTotal.innerText = "0";
+  } else {
+    // Mapping over the filtered products to generate cart product UI elements
+    let cartProductUI = cartProducts.map(
+      ({ product_price, product_image, product_name }) =>
+        `  <li class="cart-item">
     <img
       src=${product_image}
       alt=${product_name}
@@ -110,28 +113,28 @@ cartIcon.addEventListener("click", toggleCartDropdown);
       <span class="cart-item-price">${product_price} $</span>
     </div>
   </li>`
-  );
+    );
 
-  // Injecting the generated cart product UI into the HTML element with ID "cartItems"
+    // Injecting the generated cart product UI into the HTML element with ID "cartItems"
 
-  cartItems.innerHTML = cartProductUI.join("");
+    cartItems.innerHTML = cartProductUI.join("");
 
-  // Updating the number of cart items in 'cartCount' HTML element
+    // Updating the number of cart items in 'cartCount' HTML element
 
-  cartCount.innerText = cartProducts.length;
+    cartCount.innerText = cartProducts.length;
 
-  // Calculating total price of all the cart items and injecting it into 'cartTotal' HTML element
+    // Calculating total price of all the cart items and injecting it into 'cartTotal' HTML element
 
-  let totalPrice = cartProducts.reduce((total, product) => {
-    let price = parseFloat(product.product_price);
-    return total + price;
-  }, 0);
+    let totalPrice = cartProducts.reduce((total, product) => {
+      let price = parseFloat(product.product_price);
+      return total + price;
+    }, 0);
 
-  cartTotal.innerText = totalPrice;
+    cartTotal.innerText = totalPrice;
+  }
 })();
 
 //Defines a function that takes in a product id as an argument and adds it to the cart
-
 let addToCart = (productId) => {
   //uses find() method on products array to retrieve the product with the corresponding id
   let selectedProduct = products.find((product) => {
