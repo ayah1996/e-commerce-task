@@ -1,15 +1,15 @@
-let cartIcon = document.querySelector(".cart-icon");
-let cartDropdown = document.querySelector(".cart-dropdown");
-let cartItems = document.querySelector(".cart-items");
+const cartIcon = document.querySelector(".cart-icon");
+const cartDropdown = document.querySelector(".cart-dropdown");
+const cartItems = document.querySelector(".cart-items");
 let cartCount = document.querySelector(".cart-count");
 let cartTotal = document.querySelector(".total-price");
 
 let productList = document.querySelector(".products-list");
 
-let body = document.body;
-let modal = document.getElementById("modal");
-let overlay = document.getElementById("overlay");
-let closeModalBtn = document.querySelector(".close-modal-btn");
+const body = document.body;
+const modal = document.getElementById("modal");
+const overlay = document.getElementById("overlay");
+const closeModalBtn = document.querySelector(".close-modal-btn");
 
 let cartProducts;
 
@@ -124,7 +124,7 @@ cartIcon.addEventListener("click", toggleCartDropdown);
 })();
 
 //Defines a function that takes in a product id as an argument and adds it to the cart
-let addToCart = (productId) => {
+const addToCart = (productId) => {
   //uses find() method on products array to retrieve the product with the corresponding id
   let selectedProduct = products.find((product) => {
     return product.product_id === productId;
@@ -134,7 +134,7 @@ let addToCart = (productId) => {
   selectedProduct.added_to_cart = true;
 
   //adds the selected product to the `cartProducts` array using push() method
-  cartProducts.push(selectedProduct);
+  cartProducts = [...cartProducts, selectedProduct];
 
   //calls renderShoppingCart() function to update the shopping cart UI after adding the product to the cart, and calls renderProducts() function to update the product list UI to reflect the
 
@@ -144,15 +144,16 @@ let addToCart = (productId) => {
 
 //A function that removes a product from the cart if it exists.
 
-let removeFromCart = (productId) => {
+const removeFromCart = (productId) => {
   let selectedProduct = products.find((product) => {
     return product.product_id === productId;
   });
 
   if (selectedProduct) {
     selectedProduct.added_to_cart = false;
-    let selectedProductIndex = cartProducts.indexOf(selectedProduct);
-    cartProducts.splice(selectedProductIndex, 1);
+    cartProducts = cartProducts.filter((product) => {
+      return product.product_id !== productId;
+    });
 
     renderShoppingCart();
     renderProducts();
@@ -161,7 +162,7 @@ let removeFromCart = (productId) => {
 
 // This function renders the modal content based on the selected product ID:
 
-let renderModalContent = (productId) => {
+const renderModalContent = (productId) => {
   // find the product that matches the selected product ID
   let {
     product_id,
@@ -204,29 +205,31 @@ let renderModalContent = (productId) => {
 
 // A function that shows the modal by rendering its content
 
-let showModal = (productId) => {
+const showModal = (productId) => {
   // Render the modal content using the provided product ID
   renderModalContent(productId);
   modal.classList.remove("modal-closed");
-  overlay.addEventListener("click", hideModal);
 
   overlay.style.display = "block";
-
   body.style.overflow = "hidden";
+
+  // Add event listener to the overlay only once when the modal is opened
+  if (!overlay.hasAttribute("data-listener")) {
+    overlay.setAttribute("data-listener", true);
+    overlay.addEventListener("click", hideModal);
+  }
 };
 
 // This function is called when we need to hide the modal element
 
-let hideModal = () => {
+const hideModal = () => {
   modal.classList.add("modal-closed");
 
   overlay.style.display = "none";
-
-  // Reset the overflow property of the body element to its original value to enable scrolling again
   body.style.overflow = "";
 
-  overlay.removeEventListener("click", hideModal);
+  // overlay.removeEventListener("click", hideModal);
 };
 
-overlay.addEventListener("click", hideModal);
+// overlay.addEventListener("click", hideModal);
 modal.addEventListener("click", (event) => event.stopPropagation());
