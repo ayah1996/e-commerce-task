@@ -1,10 +1,10 @@
 const cartIcon = document.querySelector(".cart-icon");
 const cartDropdown = document.querySelector(".cart-dropdown");
 const cartItems = document.querySelector(".cart-items");
-let cartCount = document.querySelector(".cart-count");
-let cartTotal = document.querySelector(".total-price");
+const cartCount = document.querySelector(".cart-count");
+const cartTotal = document.querySelector(".total-price");
 
-let productList = document.querySelector(".products-list");
+const productList = document.querySelector(".products-list");
 
 const body = document.body;
 const modal = document.getElementById("modal");
