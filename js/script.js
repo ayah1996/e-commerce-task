@@ -227,9 +227,6 @@ const hideModal = () => {
 
   overlay.style.display = "none";
   body.style.overflow = "";
-
-  // overlay.removeEventListener("click", hideModal);
 };
 
-// overlay.addEventListener("click", hideModal);
 modal.addEventListener("click", (event) => event.stopPropagation());
