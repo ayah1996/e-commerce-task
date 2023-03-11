@@ -193,10 +193,11 @@ const renderModalContent = (productId) => {
       <h4 class="modal-product-price">${product_price} $</h4>
     </div>
     <div class="modal-product-desc">${product_desc}</div>
-    <div class="${added_to_cart ? "remove" : "add"}-modal-btn" onclick="${
-    added_to_cart ? `removeFromCart(${product_id})` : `addToCart(${product_id})`
-  };hideModal()">${added_to_cart ? "Remove From Cart" : "Add To Cart"}
-  </div>
+    <div class="${
+      added_to_cart ? "remove" : "add"
+    }-modal-btn" onclick="toggleModalButton(${product_id})">${
+    added_to_cart ? "Remove From Cart" : "Add To Cart"
+  }</div>
   </div>`;
 
   // Set the innerHTML of the modal content div to the created HTML string.
@@ -206,6 +207,8 @@ const renderModalContent = (productId) => {
 // A function that shows the modal by rendering its content
 
 const showModal = (productId) => {
+  modal.addEventListener("click", (event) => event.stopPropagation());
+
   // Render the modal content using the provided product ID
   renderModalContent(productId);
   modal.classList.remove("modal-closed");
@@ -220,6 +223,29 @@ const showModal = (productId) => {
   }
 };
 
+// This function toggles the modal cart button between 'Add To Cart' and 'Remove From Cart'
+const toggleModalButton = (productId) => {
+  // Get the modal cart button element with class 'add-modal-btn' or 'remove-modal-btn'
+  const modalCartButton = document.querySelector(
+    `.add-modal-btn, .remove-modal-btn`
+  );
+
+  const added_to_cart = modalCartButton.classList.contains("remove-modal-btn");
+
+  // If the product is already in the cart, remove it from the cart, change the modal button to add and update the text
+  if (added_to_cart) {
+    removeFromCart(productId);
+    modalCartButton.classList.replace("remove-modal-btn", "add-modal-btn");
+    modalCartButton.innerHTML = "Add To Cart";
+  }
+  // Otherwise, add the product to the cart, change the modal button to remove and update the text
+  else {
+    addToCart(productId);
+    modalCartButton.classList.replace("add-modal-btn", "remove-modal-btn");
+    modalCartButton.innerHTML = "Remove From Cart";
+  }
+};
+
 // This function is called when we need to hide the modal element
 
 const hideModal = () => {
@@ -228,5 +254,3 @@ const hideModal = () => {
   overlay.style.display = "none";
   body.style.overflow = "";
 };
-
-modal.addEventListener("click", (event) => event.stopPropagation());
