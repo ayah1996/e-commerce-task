@@ -356,7 +356,6 @@ header {
   justify-content: space-evenly;
   align-items: center;
   overflow-y: hidden;
-  /* display: none; */
 }
 
 .added-to-cart .remove-icon {
